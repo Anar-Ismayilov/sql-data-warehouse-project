@@ -62,8 +62,44 @@ sls_cust_id		INT,            --W1
 sls_order_dt	INT,            --W1
 sls_ship_dt		INT,            --W1
 sls_due_dt		INT,            --W1
-sls_sales		  INT,            --W1
+sls_sales		INT,            --W1
 sls_quantity	INT,            --W1
-sls_price		  INT             --W1
+sls_price		INT             --W1
+);
+GO
+
+IF OBJECT_ID('bronze.erp_cust_az12','U') IS NOT NULL
+	DROP TABLE bronze.erp_cust_az12;
+GO
+
+CREATE TABLE bronze.erp_cust_az12
+(
+CID		NVARCHAR(50),
+BDATE	DATE, --W1
+GEN		NVARCHAR(50)
+);
+GO
+
+IF OBJECT_ID('bronze.erp_loc_a101','U') IS NOT NULL
+	DROP TABLE bronze.erp_loc_a101;
+GO
+
+CREATE TABLE bronze.erp_loc_a101
+(
+CID			VARCHAR(50),
+CNTRY		VARCHAR(50)
+);
+GO
+
+IF OBJECT_ID('bronze.erp_px_cat_g1v2','U') IS NOT NULL
+	DROP TABLE bronze.erp_px_cat_g1v2;
+GO
+
+CREATE TABLE bronze.erp_px_cat_g1v2
+(
+İD				VARCHAR(50),
+CAT				VARCHAR(50),
+SUBCAT			VARCHAR(50),
+MAINTENANCE		VARCHAR(50)
 );
 GO
