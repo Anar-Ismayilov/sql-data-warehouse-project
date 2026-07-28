@@ -1,4 +1,3 @@
-
 /*
 ===============================================================================
 Stored Procedure: Load Bronze Layer (Source -> Bronze)
@@ -17,10 +16,12 @@ Usage Example:
     EXEC bronze.load_bronze;
 ===============================================================================
 */
+EXEC bronze.load_bronze
 CREATE OR ALTER PROCEDURE bronze.load_bronze AS
 BEGIN
-	DECLARE @start_time DATETIME, @end_time DATETIME
+	DECLARE @start_time DATETIME, @end_time DATETIME, @total_start DATETIME ,@total_end DATETIME
 	BEGIN TRY
+		SET @total_start  = GETDATE()
 		PRINT '========================================================='
 		PRINT 'LOADING BRONZE LAYER'
 		PRINT '========================================================='
@@ -43,7 +44,8 @@ BEGIN
 		); 
 		SET @end_time=GETDATE()
 		PRINT 'Load Duration : ' + CAST(DATEDIFF(second,@start_time,@end_time) as varchar) + 'seconds'
-
+		
+		SET @start_time = GETDATE()
 		PRINT '>> Truncate Table bronze.crm_prd_info'
 		TRUNCATE TABLE bronze.crm_prd_info  ;
 
@@ -56,11 +58,13 @@ BEGIN
 			FIELDTERMINATOR = ',',
 			TABLOCK
 		);
-
+		SET @end_time = GETDATE()
+		PRINT 'Load Duration : ' +CAST(DATEDIFF(SECOND,@start_time,@end_time) AS VARCHAR)
 
 		PRINT '>> Truncate Table bronze.crm_sales_details'
 		TRUNCATE TABLE bronze.crm_sales_details  ;
-
+		
+		SET @start_time = GETDATE()
 		PRINT '>> Insert Data Into: bronze.crm_sales_details' 
 		BULK INSERT bronze.crm_sales_details
 		FROM 'C:\Users\Asus2\Desktop\Sql_course\sql-data-warehouse-project-main\sql-data-warehouse-project-main\datasets\source_crm\sales_details.csv'
@@ -70,11 +74,14 @@ BEGIN
 			FIELDTERMINATOR = ',',
 			TABLOCK
 		);
- 
+ SET @end_time = GETDATE()
+		PRINT 'Load Duration : ' +CAST(DATEDIFF(SECOND,@start_time,@end_time) AS VARCHAR)
+
  		PRINT '---------------------------------------------------------'
 		PRINT 'LOADING ERP TABLES'
 		PRINT '---------------------------------------------------------'
 
+		SET @start_time = GETDATE()
 		PRINT '>> Truncate Table bronze.erp_cust_az12'
 		TRUNCATE TABLE bronze.erp_cust_az12  ;
 
@@ -87,7 +94,10 @@ BEGIN
 			FIELDTERMINATOR = ',',
 			TABLOCK
 		);
+		SET @end_time = GETDATE()
+		PRINT 'Load Duration : ' +CAST(DATEDIFF(SECOND,@start_time,@end_time) AS VARCHAR)
 
+		SET @start_time = GETDATE()
 		PRINT '>> Truncate Table bronze.erp_loc_a101'
 		TRUNCATE TABLE bronze.erp_loc_a101;
 
@@ -100,8 +110,10 @@ BEGIN
 			FIELDTERMINATOR = ',',
 			TABLOCK
 		);
+		SET @end_time = GETDATE()
+		PRINT 'Load Duration : ' +CAST(DATEDIFF(SECOND,@start_time,@end_time) AS VARCHAR)
 
-
+		SET @start_time = GETDATE()
 		PRINT '>> Truncate Table bronze.erp_px_cat_g1v2'
 		TRUNCATE TABLE bronze.erp_px_cat_g1v2;
 
@@ -114,6 +126,10 @@ BEGIN
 			FIELDTERMINATOR = ',',
 			TABLOCK
 		);
+		SET @end_time = GETDATE()
+		PRINT 'Load Duration : ' +CAST(DATEDIFF(SECOND,@start_time,@end_time) AS VARCHAR)
+		SET @total_end = GETDATE()
+		PRINT 'Total Load Duration: ' +CAST(DATEDIFF(SECOND , @start_time,@end_time) AS VARCHAR)
 	END TRY
 	BEGIN CATCH
 		PRINT '====================================================================='
