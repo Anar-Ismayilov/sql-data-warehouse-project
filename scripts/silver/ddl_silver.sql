@@ -9,12 +9,7 @@ Script Purpose:
 ===============================================================================
 */
 
-/* 
-   PROJECT NOTES / WARNINGS:
-   -- W1: In a real-world production project, ID or date columns might contain 
-         corrupted data or characters, so VARCHAR(MAX) is preferred in the silver layer. 
-         However, for this portfolio/course context, static types (INT, DATE) are used.
-*/
+
 USE DataWarehouse;
 GO
 
@@ -24,13 +19,13 @@ GO
 
 CREATE TABLE silver.crm_cust_info
 (
-	cst_id				INT,			    --W1
+	cst_id				INT,			    
 	cst_key				NVARCHAR(50),
 	cst_firstname		NVARCHAR(50),
 	cst_lastname		NVARCHAR(50),
 	cst_marital_status	NVARCHAR(50),
 	cst_gndr			NVARCHAR(50),
-	cst_create_date		DATE,				--W1
+	cst_create_date		DATE,				
 	dwh_create_date		DATETIME2 DEFAULT GETDATE()
 );
 GO
@@ -41,13 +36,13 @@ GO
 
 CREATE TABLE silver.crm_prd_info
 (
-	prd_id			INT,           --W1
+	prd_id			INT,           
 	prd_key			VARCHAR(50),
 	prd_nm			VARCHAR(50),
-	prd_cost		INT,           --W1
+	prd_cost		INT,           
 	prd_line		VARCHAR(50),
-	prd_start_dt	DATE,        --W1
-	prd_end_dt		DATE,        --W1
+	prd_start_dt	DATE,        
+	prd_end_dt		DATE,        
 	dwh_create_date		DATETIME2 DEFAULT GETDATE()
 );                          
 GO
@@ -60,13 +55,13 @@ CREATE TABLE silver.crm_sales_details
 (
 	sls_ord_num		VARCHAR(50),
 	sls_prd_key		VARCHAR(50),
-	sls_cust_id		INT,            --W1
-	sls_order_dt	INT,            --W1
-	sls_ship_dt		INT,            --W1
-	sls_due_dt		INT,            --W1
-	sls_sales		INT,            --W1
-	sls_quantity	INT,            --W1
-	sls_price		INT,            --W1
+	sls_cust_id		INT,            
+	sls_order_dt	INT,            
+	sls_ship_dt		INT,            
+	sls_due_dt		INT,            
+	sls_sales		INT,            
+	sls_quantity	INT,            
+	sls_price		INT,            
 	dwh_create_date		DATETIME2 DEFAULT GETDATE()
 );
 GO
