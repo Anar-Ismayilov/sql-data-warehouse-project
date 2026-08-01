@@ -36,7 +36,8 @@ GO
 
 CREATE TABLE silver.crm_prd_info
 (
-	prd_id			INT,           
+	prd_id			INT,   
+	cat_id			VARCHAR(50),
 	prd_key			VARCHAR(50),
 	prd_nm			VARCHAR(50),
 	prd_cost		INT,           
