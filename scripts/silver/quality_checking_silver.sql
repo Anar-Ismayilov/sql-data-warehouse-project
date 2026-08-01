@@ -39,6 +39,8 @@ SELECT
 FROM 
 DataWarehouse.silver.crm_cust_info;
 
+----------------------------------------------------------------------------------------------------
+
 --crm_prd_info
 --Check For Nulls or Dublicates in Primary Key
 --Expectation: No Result
@@ -64,3 +66,30 @@ FROM
 	DataWarehouse.silver.crm_prd_info prd_info
 WHERE
 	prd_info.prd_end_dt<prd_info.prd_start_dt
+
+--Data Standardization and Consistency 
+SELECT 
+	DISTINCT(prd_info.prd_line)
+FROM
+	DataWarehouse.silver.crm_prd_info prd_info;
+
+--True Date Data
+--Expectation: No Result	
+SELECT
+*
+FROM 
+	DataWarehouse.silver.crm_prd_info prd_info
+WHERE
+prd_info.prd_end_dt<prd_info.prd_start_dt;
+
+----------------------------------------------------------------------------------------------------
+
+--crm_sales_details
+--Check For Nulls or Dublicates in Primary Key
+--Expectation: No Result
+SELECT
+	*
+FROM
+	DataWarehouse.silver.crm_sales_details sal_det
+WHERE 
+	TRIM(sal_det.sls_ord_num) != sal_det.sls_ord_num;
