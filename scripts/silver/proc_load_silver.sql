@@ -37,15 +37,30 @@ FROM(
 ) cst_info
 WHERE flag=1;
 
+TRUNCATE TABLE silver.crm_prd_info;
+GO
+
+INSERT INTO silver.crm_prd_info
+(
+	prd_id			 , 
+	cat_id		,	
+	prd_key		,	
+	prd_nm		,	
+	prd_cost	,	    
+	prd_line	,
+	prd_start_dt	,
+	prd_end_dt	  
+)
 SELECT 
 	prd_id,
-    prd_key,
     REPLACE(SUBSTRING(prd_info.prd_key,1,5),'-','_')  cat_id,
-	REPLACE(SUBSTRING(prd_info.prd_key,7,LEN(prd_info.prd_key)-7),'-','_')  cat_id,
+	SUBSTRING(prd_info.prd_key,7,LEN(prd_info.prd_key))prd_key,
 	prd_nm,
     ISNULL(prd_cost,0) prd_cost,
     ISNULL(prd_line,'n/a'),
-	prd_end_dt prd_start_dt,
-	prd_start_dt prd_end_dt
-    
+	CAST(prd_info.prd_start_dt AS DATE),
+	DATEADD(DAY,-1,CAST(LEAD(prd_info.prd_start_dt) OVER(PARTITION BY prd_key ORDER BY prd_start_dt) AS DATE)) prd_end_date
   FROM DataWarehouse.bronze.crm_prd_info prd_info
+ ;
+
+ 
