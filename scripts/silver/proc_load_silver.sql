@@ -63,4 +63,53 @@ SELECT
   FROM DataWarehouse.bronze.crm_prd_info prd_info
  ;
 
- 
+TRUNCATE TABLE DataWarehouse.silver.crm_sales_details;
+GO
+
+INSERT INTO DataWarehouse.silver.crm_sales_details
+(
+sls_ord_num		,
+	sls_prd_key	,
+	sls_cust_id	,           
+	sls_order_dt,            
+	sls_ship_dt	,         
+	sls_due_dt,            
+	sls_sales,           
+	sls_quantity,            
+	sls_price	
+)
+SELECT 
+	sal_det.sls_ord_num,
+	sal_det.sls_prd_key,
+	sal_det.sls_cust_id,
+	CASE
+		WHEN sal_det.sls_order_dt<=0 OR LEN(sal_det.sls_order_dt) != 8 THEN NULL
+		ELSE CAST(CAST(sal_det.sls_order_dt AS VARCHAR) AS DATE) 
+		END sls_order_dt,
+
+		CASE
+		WHEN sal_det.sls_ship_dt<=0 OR LEN(sal_det.sls_ship_dt) != 8 THEN NULL
+		ELSE CAST(CAST(sal_det.sls_ship_dt AS VARCHAR) AS DATE) 
+		END sls_ship_dt,
+
+		CASE
+		WHEN sal_det.sls_due_dt<=0 OR LEN(sal_det.sls_due_dt) != 8 THEN NULL
+		ELSE CAST(CAST(sal_det.sls_due_dt AS VARCHAR) AS DATE)
+		END sls_due_dt,
+
+		CASE 
+		WHEN sal_det.sls_sales <=0 OR sal_det.sls_sales IS NULL OR sal_det.sls_sales != sal_det.sls_quantity* ABS(sal_det.sls_price) 
+		THEN sal_det.sls_quantity*sal_det.sls_price
+		ELSE sal_det.sls_sales
+		END sls_sales,
+
+		sal_det.sls_quantity,
+
+		CASE 
+		WHEN sal_det.sls_price <=0 OR sal_det.sls_price IS NULL  
+		THEN ABS(sal_det.sls_sales)/sal_det.sls_quantity
+		ELSE sal_det.sls_price
+		END sls_price
+	
+FROM
+	DataWarehouse.bronze.crm_sales_details sal_det;
