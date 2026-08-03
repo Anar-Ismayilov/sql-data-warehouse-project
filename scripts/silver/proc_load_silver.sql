@@ -113,3 +113,13 @@ SELECT
 	
 FROM
 	DataWarehouse.bronze.crm_sales_details sal_det;
+
+SELECT
+	CASE
+	WHEN cust_az.CID LIKE 'NAS%' THEN SUBSTRING(cust_az.CID,4,LEN(cust_az.CID))
+	ELSE cust_az.CID
+	END CID,
+	cust_az.BDATE,
+	cust_az.GEN
+FROM
+	DataWarehouse.bronze.erp_cust_az12 AS cust_az
