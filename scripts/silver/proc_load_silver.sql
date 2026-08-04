@@ -85,41 +85,61 @@ SELECT
 	CASE
 		WHEN sal_det.sls_order_dt<=0 OR LEN(sal_det.sls_order_dt) != 8 THEN NULL
 		ELSE CAST(CAST(sal_det.sls_order_dt AS VARCHAR) AS DATE) 
-		END sls_order_dt,
+	END sls_order_dt,
 
-		CASE
+	CASE
 		WHEN sal_det.sls_ship_dt<=0 OR LEN(sal_det.sls_ship_dt) != 8 THEN NULL
 		ELSE CAST(CAST(sal_det.sls_ship_dt AS VARCHAR) AS DATE) 
-		END sls_ship_dt,
+	END sls_ship_dt,
 
-		CASE
+	CASE
 		WHEN sal_det.sls_due_dt<=0 OR LEN(sal_det.sls_due_dt) != 8 THEN NULL
 		ELSE CAST(CAST(sal_det.sls_due_dt AS VARCHAR) AS DATE)
-		END sls_due_dt,
+	END sls_due_dt,
 
-		CASE 
+	CASE 
 		WHEN sal_det.sls_sales <=0 OR sal_det.sls_sales IS NULL OR sal_det.sls_sales != sal_det.sls_quantity* ABS(sal_det.sls_price) 
 		THEN sal_det.sls_quantity*sal_det.sls_price
 		ELSE sal_det.sls_sales
-		END sls_sales,
+	END sls_sales,
 
-		sal_det.sls_quantity,
+	sal_det.sls_quantity,
 
-		CASE 
+	CASE 
 		WHEN sal_det.sls_price <=0 OR sal_det.sls_price IS NULL  
 		THEN ABS(sal_det.sls_sales)/sal_det.sls_quantity
 		ELSE sal_det.sls_price
-		END sls_price
+	END sls_price
 	
 FROM
 	DataWarehouse.bronze.crm_sales_details sal_det;
 
+
+TRUNCATE TABLE DataWarehouse.silver.erp_cust_az12;
+GO
+
+INSERT INTO DataWarehouse.silver.erp_cust_az12
+(
+CID,
+BDATE,
+GEN
+)
 SELECT
 	CASE
-	WHEN cust_az.CID LIKE 'NAS%' THEN SUBSTRING(cust_az.CID,4,LEN(cust_az.CID))
-	ELSE cust_az.CID
+		WHEN cust_az.CID LIKE 'NAS%' THEN SUBSTRING(cust_az.CID,4,LEN(cust_az.CID))
+		ELSE cust_az.CID
 	END CID,
-	cust_az.BDATE,
-	cust_az.GEN
+
+	CASE
+		WHEN cust_az.BDATE>GETDATE() THEN NULL
+		ELSE cust_az.BDATE
+	END,
+	
+	CASE 
+		WHEN cust_az.GEN LIKE 'F%' THEN 'Female'
+		WHEN cust_az.GEN LIKE 'M%' THEN 'Male'
+		ELSE 'n/a'
+	END
 FROM
 	DataWarehouse.bronze.erp_cust_az12 AS cust_az
+WHERE cust_az.BDATE>'1916-01-01'; 
