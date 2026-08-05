@@ -345,6 +345,22 @@ SELECT
 	DISTINCT(cust_az.GEN)
 FROM
 	DataWarehouse.silver.erp_cust_az12 cust_az;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--erp_loc_a101
+--Check Data Matching	
+--Expectation: No Result
+SELECT 
+	*
+FROM
+	DataWarehouse.silver.erp_loc_a101 b_loc_a101
+WHERE 
+	REPLACE(b_loc_a101.CID,'-','') NOT IN (SELECT cust_info.cst_key FROM DataWarehouse.silver.crm_cust_info cust_info);
+
+----Data Standardization and Consistency  
+	SELECT 
+		DISTINCT(b_loc_a101.CNTRY)
+	FROM
+		DataWarehouse.silver.erp_loc_a101 b_loc_a101
 
 
 
