@@ -1,3 +1,4 @@
+
 USE DataWarehouse;
 GO
 TRUNCATE TABLE silver.crm_cust_info;
@@ -143,3 +144,24 @@ SELECT
 FROM
 	DataWarehouse.bronze.erp_cust_az12 AS cust_az
 WHERE cust_az.BDATE>'1916-01-01'; 
+
+
+TRUNCATE TABLE DataWarehouse.silver.erp_loc_a101;
+GO
+
+INSERT INTO DataWarehouse.silver.erp_loc_a101
+(
+CID,
+CNTRY
+)
+
+SELECT 
+	REPLACE(b_loc_a101.CID,'-',''),
+	CASE 
+		WHEN b_loc_a101.CNTRY IN ('US','USA') THEN 'United States'
+		WHEN b_loc_a101.CNTRY ='DE' THEN 'Germany'
+		WHEN TRIM(b_loc_a101.CNTRY) ='' OR b_loc_a101.CNTRY IS NULL THEN 'n/a'
+		ELSE TRIM(b_loc_a101.CNTRY)
+		END cntry
+FROM 
+	DataWarehouse.bronze.erp_loc_a101 b_loc_a101
