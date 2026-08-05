@@ -164,4 +164,4 @@ SELECT
 		ELSE TRIM(b_loc_a101.CNTRY)
 		END cntry
 FROM 
-	DataWarehouse.bronze.erp_loc_a101 b_loc_a101
+	DataWarehouse.bronze.erp_loc_a101 b_loc_a101;
