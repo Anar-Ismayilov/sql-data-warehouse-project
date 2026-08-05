@@ -121,9 +121,9 @@ GO
 
 INSERT INTO DataWarehouse.silver.erp_cust_az12
 (
-CID,
-BDATE,
-GEN
+cid,
+bdate,
+gen
 )
 SELECT
 	CASE
@@ -151,8 +151,8 @@ GO
 
 INSERT INTO DataWarehouse.silver.erp_loc_a101
 (
-CID,
-CNTRY
+cid,
+cntry
 )
 
 SELECT 
@@ -164,4 +164,22 @@ SELECT
 		ELSE TRIM(b_loc_a101.CNTRY)
 		END cntry
 FROM 
-	DataWarehouse.bronze.erp_loc_a101 b_loc_a101;
+	DataWarehouse.bronze.erp_loc_a101 b_loc_a101
+
+TRUNCATE TABLE DataWarehouse.silver.erp_px_cat_g1v2;
+GO
+
+INSERT INTO DataWarehouse.silver.erp_px_cat_g1v2
+(
+id,
+cat,
+subcat,
+maintenance
+)
+SELECT
+	b_cat_g1v2.İD,
+	b_cat_g1v2.CAT,
+	b_cat_g1v2.SUBCAT,
+	b_cat_g1v2.MAINTENANCE
+FROM
+	DataWarehouse.bronze.erp_px_cat_g1v2 b_cat_g1v2;
