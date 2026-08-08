@@ -66,7 +66,7 @@ BEGIN
 			FROM
 				DataWarehouse.bronze.crm_cust_info
 		) cst_info
-		WHERE flag=1;
+		WHERE flag=1 AND cst_info.cst_key LIKE 'AW%';
 		SET @end_time=GETDATE()
 		PRINT 'Load Duration : ' + CAST(DATEDIFF(second,@start_time,@end_time) as varchar) + 'seconds'
 
