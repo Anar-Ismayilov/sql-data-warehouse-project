@@ -61,7 +61,7 @@ SELECT
 	pc.subcat subcategory,
 	pi.prd_nm product_name,
 	pi.prd_cost cost,
-	pi.prd_line produck_line,
+	pi.prd_line product_line,
 	pc.maintenance maintenance,
 	pi.prd_start_dt start_date
 FROM
