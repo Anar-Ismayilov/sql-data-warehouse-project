@@ -53,7 +53,7 @@ GO
 -- Create Dimension: gold.dim_products
 CREATE VIEW gold.dim_products AS
 SELECT
-	ROW_NUMBER() OVER (ORDER BY pi.prd_start_dt, pi.prd_key) prd_key,
+	ROW_NUMBER() OVER (ORDER BY pi.prd_start_dt, pi.prd_key) product_key,
 	pi.prd_id product_id,
 	prd_key product_number,
 	pc.cat category,
